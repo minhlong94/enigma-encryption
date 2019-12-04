@@ -91,18 +91,20 @@ for i in range(3):
     if r == 1:
         continue
     else:
-        for k in range(r - 2):
-            if i == 0:
+        if i == 0:
+            for _ in range(r-1):
                 switchRing(Alpha)
-            elif i == 1:
+        elif i == 1:
+            for _ in range(r-1):
                 switchRing(Beta)
                 r2 += 1
-            elif i == 2:
+        elif i == 2:
+            for _ in range(r-1):
                 switchRing(Gamma)
                 r3 += 1
 
 pb = input("Input the of plugboards you want, in the format: if A connects with T, type \"AT\", each separated by a "
-           "white space:")  # Plugboard input
+           "white space. Press Enter if you do not want any.\n")  # Plugboard input
 
 pblist = [c for c in pb]
 swap1, swap2 = [], []
