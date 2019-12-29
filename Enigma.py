@@ -1,7 +1,6 @@
-"""The code to check the results is provided by NSA on GitHub, for free:
-https://github.com/NationalSecurityAgency/enigma-simulator
+"""You can check the result on cryptii.com
 About how Enigma REALLY works, please read the link: http://users.telenet.be/d.rijmenants/en/enigmatech.htm
-WARNING: cryptii.com encrypts wrong when both Rotor 1 and 2 go pass the notches. Please do not use it."""
+"""
 
 
 def switchRing(ring):  # Switch Ring function
@@ -63,7 +62,6 @@ def Enigma():
     Position = ["Right", "Middle", "Left"]
 
     enigmarotor = []  # Declare list for input rotors
-    reflector = []  # Declare list for reflector
     message = []  # Declare list for output message
     RotorNotches = []  # Get Rotors' notches
     space = []  # List for white spaces' indices
@@ -73,10 +71,8 @@ def Enigma():
     for i in range(3):
         rotor = int(input("Select your {} Rotor: from I to V by pressing 1 to 5\n".format(Position[i])))
         enigmarotor.append(Rotors[rotor - 1])  # Append declared Rotors to the Enigma Machine
-        if i < 2:
-            RotorNotches.append(Notches[rotor - 1])  # Take Rotors' Notches
-        else:
-            continue
+        RotorNotches.append(Notches[rotor - 1])  # Take Rotors' Notches
+
     # Take Rotors' information
     rotor1 = enigmarotor[0].copy()
     rotor2 = enigmarotor[1].copy()
@@ -118,14 +114,22 @@ def Enigma():
             space.append(n)
     removeSpace(plaintext)
     # The Enigma is ready to run!
+    odd = False  # The real Enigma has an odd case when it skips a character. Please read the document
     for k in range(len(plaintext)):
-        switchRing(Alpha)  # The rotors move BEFORE the message is encrypted
-        if Alpha[0] == chr(ord(RotorNotches[0]) + 1):
-            switchRing(Beta)  # if rotor 1 switches over the notch, the next rotor advances
+        if odd:
+            switchRing(Alpha)
+            switchRing(Beta)
+            switchRing(Gamma)
             r2 += 1
-            if Beta[0] == chr(ord(RotorNotches[1]) + 1):
-                switchRing(Gamma)  # if Rotor 1 switches over the notch, and so does rotor 2, then rotor 3 advances
-                r3 += 1
+            r3 += 1
+            odd = False
+        elif not odd:
+            switchRing(Alpha)  # The rotors move BEFORE the message is encrypted
+            if Alpha[0] == chr(ord(RotorNotches[0]) + 1):
+                switchRing(Beta)  # if rotor 1 switches over the notch, the next rotor advances
+                r2 += 1
+                if Beta[0] == chr(ord(RotorNotches[1])):
+                    odd = True
 
         plaintext[k] = plugboard(plaintext[k], swap1, swap2)  # Plugboard comes first
 
@@ -173,8 +177,11 @@ def Enigma():
         revoutput = Alphabet[Alpha.index(revout)]
         revoutput = plugboard(revoutput, swap1, swap2)  # Plugboard again
         message.append(revoutput)  # Append the message
+    length = len(message)
     for c in space:
         message.insert(c, " ")  # Put white spaces in the message
     print("".join(message))  # Print out result
+    print("Number of encrypted character: {}".format(length))
+
 
 Enigma()
