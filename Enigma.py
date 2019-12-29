@@ -180,8 +180,10 @@ def Enigma():
     length = len(message)
     for c in space:
         message.insert(c, " ")  # Put white spaces in the message
+    lengthWithSpace = len(message)
+    print("\n")
     print("".join(message))  # Print out result
-    print("Number of encrypted character: {}".format(length))
-
+    print("\nNumber of encrypted character: {}".format(length))
+    print("Number of encrypted character with space: {}".format(lengthWithSpace))
 
 Enigma()
