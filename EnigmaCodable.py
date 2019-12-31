@@ -1,11 +1,35 @@
 """
 About how Enigma REALLY works, please read the link: http://users.telenet.be/d.rijmenants/en/enigmatech.htm
+Parameters
+----------
+First : type int
+    First rotor's information
+Second : type int
+    Second rotor's information
+Third : type int
+    Third rotor's information
+Four: type int
+    Reflector's information
+Fifth: type int
+    First rotor's position
+Six: type int
+    Second rotor's position
+Seven: type int
+    Third rotor's position
+Eighth: type String
+    Plugboard's information, A connects with T: "AT", each is seperated by a white space. Example: "AT GX BJ SE XM"
+Ninth: type String
+    Plaintext that needs encryption. Must be in UPPERCASE.
 """
 
 
 class Enigma:
+    def __init__(self):
+        pass
+
     @staticmethod
-    def run():
+    def run(rotorOne, rotorTwo, rotorThree, reflector, rotorPosiOne, rotorPosiTwo, rotorPosiThree, plugBoard,
+            plaintext):
         def switchRing(ring):  # Switch Ring function
             swap = ring[0]
             del ring[0]
@@ -66,41 +90,37 @@ class Enigma:
         space = []  # List for white spaces' indices
         r2, r3 = 0, 0  # First notches of rotors are equal 0
 
-        print("Enigma Machine, Model Wermarcht Machine I\nSelect 3 rotors of your choice:")
-        for i in range(3):
-            rotor = int(input("Select your {} Rotor: from I to V by pressing 1 to 5\n".format(Position[i])))
-            enigmarotor.append(Rotors[rotor - 1])  # Append declared Rotors to the Enigma Machine
-            RotorNotches.append(Notches[rotor - 1])  # Take Rotors' Notches
+        enigmarotor.append(Rotors[rotorOne - 1])  # Append declared Rotors to the Enigma Machine
+        enigmarotor.append(Rotors[rotorTwo - 1])  # Append declared Rotors to the Enigma Machine
+        enigmarotor.append(Rotors[rotorThree - 1])  # Append declared Rotors to the Enigma Machine
+        RotorNotches.append(Notches[rotorOne - 1])  # Take Rotors' Notches
+        RotorNotches.append(Notches[rotorTwo - 1])  # Take Rotors' Notches
+        RotorNotches.append(Notches[rotorThree - 1])  # Take Rotors' Notches
 
-        # Take Rotors' information
         rotor1 = enigmarotor[0].copy()
         rotor2 = enigmarotor[1].copy()
         rotor3 = enigmarotor[2].copy()
-        reflect = int(input("Select one reflector from the list: A, B, C by choosing one from 1 to 3:\n"))
-        reflector = Reflectors[reflect - 1].copy()
-        for i in range(3):
-            r = int(
-                input("Input the {} rotor positions you want to assign as the first, from A to Z, by choosing one "
-                      "from 1 "
-                      "to 26.\n".format(Position[i])))
-            if r == 1:
-                continue
-            else:
-                if i == 0:
-                    for _ in range(r - 1):
-                        switchRing(Alpha)
-                elif i == 1:
-                    for _ in range(r - 1):
-                        switchRing(Beta)
-                        r2 += 1
-                elif i == 2:
-                    for _ in range(r - 1):
-                        switchRing(Gamma)
-                        r3 += 1
-        pb = input(
-            "Input the of plugboards you want, in the format: if A connects with T, type \"AT\", each separated by a "
-            "white space. Press Enter if you do not want any.\n")  # Plugboard input
-        pblist = [c for c in pb]
+        reflector = Reflectors[reflector - 1].copy()
+
+        if rotorPosiOne == 1:
+            pass
+        else:
+            for _ in range(rotorPosiOne - 1):
+                switchRing(Alpha)
+        if rotorPosiTwo == 1:
+            pass
+        else:
+            for _ in range(rotorPosiTwo - 1):
+                switchRing(Beta)
+                r2 += 1
+        if rotorPosiThree == 1:
+            pass
+        else:
+            for _ in range(rotorPosiThree - 1):
+                switchRing(Gamma)
+                r3 += 1
+
+        pblist = [c for c in plugBoard]
         swap1, swap2 = [], []
         removeSpace(pblist)
         for i in range(len(pblist)):
@@ -108,12 +128,12 @@ class Enigma:
                 swap1.append(pblist[i])
             else:
                 swap2.append(pblist[i])
-        plaintext = [c for c in input("Input the message you want to encrypt: \n")]
+        savePlaintext = plaintext
+        plaintext = [c for c in plaintext]
         for n in range(len(plaintext)):
             if plaintext[n] == " ":
                 space.append(n)
         removeSpace(plaintext)
-        # The Enigma is ready to run!
         odd = False  # The real Enigma has an odd case when it skips a character. Please read the document
         for k in range(len(plaintext)):
             if odd:
@@ -181,10 +201,12 @@ class Enigma:
         for c in space:
             message.insert(c, " ")  # Put white spaces in the message
         lengthWithSpace = len(message)
-        print("\n")
+        print("{}".format(savePlaintext))
+        print("")
         print("".join(message))  # Print out result
         print("\nNumber of encrypted character: {}".format(length))
         print("Number of encrypted character with space: {}\n".format(lengthWithSpace))
 
 
-Enigma.run()
+Enigma.run(1, 2, 3, 2, 1, 1, 1, "AT GX BJ", "AAAAAAAAAAAAAAAAAAAAAAAAA")
+Enigma.run(3, 2, 1, 1, 3, 6, 4, "BJ SE XC", "GGGGGGGGGGGGGGGGGGGGGGGGGGGGG")
