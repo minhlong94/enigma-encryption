@@ -108,11 +108,14 @@ class Enigma:
                 swap1.append(pblist[i])
             else:
                 swap2.append(pblist[i])
-        plaintext = [c for c in input("Input the message you want to encrypt: \n")]
+        plaintext = input("Input the message you want to encrypt: \n")
+        originalText = plaintext
+        plaintext = [c for c in plaintext]
         for n in range(len(plaintext)):
             if plaintext[n] == " ":
                 space.append(n)
         removeSpace(plaintext)
+
         # The Enigma is ready to run!
         odd = False  # The real Enigma has an odd case when it skips a character. Please read the document
         for k in range(len(plaintext)):
@@ -177,12 +180,14 @@ class Enigma:
             revoutput = Alphabet[Alpha.index(revout)]
             revoutput = plugboard(revoutput, swap1, swap2)  # Plugboard again
             message.append(revoutput)  # Append the message
+
         length = len(message)
         for c in space:
             message.insert(c, " ")  # Put white spaces in the message
         lengthWithSpace = len(message)
         print("\n")
-        print("".join(message))  # Print out result
+        print("Plaintext: {}".format(originalText))
+        print("Encrypted text: {}".format("".join(message)))  # Print out result
         print("\nNumber of encrypted character: {}".format(length))
         print("Number of encrypted character with space: {}\n".format(lengthWithSpace))
 

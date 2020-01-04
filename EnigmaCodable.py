@@ -1,25 +1,5 @@
 """
 About how Enigma REALLY works, please read the link: http://users.telenet.be/d.rijmenants/en/enigmatech.htm
-Parameters
-----------
-First : type int
-    First rotor's information
-Second : type int
-    Second rotor's information
-Third : type int
-    Third rotor's information
-Four: type int
-    Reflector's information
-Fifth: type int
-    First rotor's position
-Six: type int
-    Second rotor's position
-Seven: type int
-    Third rotor's position
-Eighth: type String
-    Plugboard's information, A connects with T: "AT", each is seperated by a white space. Example: "AT GX BJ SE XM"
-Ninth: type String
-    Plaintext that needs encryption. Must be in UPPERCASE.
 """
 
 
@@ -82,7 +62,6 @@ class Enigma:
         RefB = [c for c in "YRUHQSLDPXNGOKMIEBFZCWVJAT"]
         RefC = [c for c in "FVPJIAOYEDRZXWGCTKUQSBNMHL"]
         Reflectors = [RefA, RefB, RefC]
-        Position = ["Right", "Middle", "Left"]
 
         enigmarotor = []  # Declare list for input rotors
         message = []  # Declare list for output message
@@ -201,12 +180,13 @@ class Enigma:
         for c in space:
             message.insert(c, " ")  # Put white spaces in the message
         lengthWithSpace = len(message)
-        print("{}".format(savePlaintext))
+        print("Plaintext: {}".format(savePlaintext))
         print("")
-        print("".join(message))  # Print out result
+        print("Encrypted Text: {} ".format("".join(message)))  # Print out result
         print("\nNumber of encrypted character: {}".format(length))
         print("Number of encrypted character with space: {}\n".format(lengthWithSpace))
 
-
+# 3 test cases
 Enigma.run(1, 2, 3, 2, 1, 1, 1, "AT GX BJ", "AAAAAAAAAAAAAAAAAAAAAAAAA")
-Enigma.run(3, 2, 1, 1, 3, 6, 4, "BJ SE XC", "GGGGGGGGGGGGGGGGGGGGGGGGGGGGG")
+Enigma.run(3, 2, 1, 1, 1, 1, 3, "BJ SE XC", "GGGGGGGGGGGGGGGGGGGGGGGGG")
+Enigma.run(2, 1, 3, 3, 6, 7, 2, "NW QX ZJ", "MOTHER THE FOLK FROM ABOVE CALLS ME")
