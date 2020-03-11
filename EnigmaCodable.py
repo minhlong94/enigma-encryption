@@ -10,6 +10,10 @@ class Enigma:
     @staticmethod
     def run(rotorOne, rotorTwo, rotorThree, reflector, rotorPosiOne, rotorPosiTwo, rotorPosiThree, plugBoard,
             plaintext):
+        def modulo(add1, add2, min, max):
+            modulus = max - min + 1
+            return (add1 + add2 - min) % modulus + min
+
         def switchRing(ring):  # Switch Ring function
             swap = ring[0]
             del ring[0]
@@ -45,22 +49,22 @@ class Enigma:
                         break
             return letter
 
-        Alphabet = [c for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"]
+        Alphabet = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         Alpha = Alphabet.copy()  # First ring
         Beta = Alphabet.copy()  # Second ring
         Gamma = Alphabet.copy()  # Third ring
-        RotorI = [c for c in "EKMFLGDQVZNTOWYHXUSPAIBRCJ"]  # Model 1930, Enigma I
-        RotorII = [c for c in "AJDKSIRUXBLHWTMCQGZNPYFVOE"]  # Model 1930, Enigma I
-        RotorIII = [c for c in "BDFHJLCPRTXVZNYEIWGAKMUSQO"]  # Model 1930, Enigma I
-        RotorIV = [c for c in "ESOVPZJAYQUIRHXLNFTGKDCMWB"]  # Model Dec 1938, M3 Army
-        RotorV = [c for c in "VZBRGITYUPSDNHLXAWMJQOFECK"]  # Model Dec 1938, M3 Army
+        RotorI = list("EKMFLGDQVZNTOWYHXUSPAIBRCJ")  # Model 1930, Enigma I
+        RotorII = list("AJDKSIRUXBLHWTMCQGZNPYFVOE")  # Model 1930, Enigma I
+        RotorIII = list("BDFHJLCPRTXVZNYEIWGAKMUSQO")  # Model 1930, Enigma I
+        RotorIV = list("ESOVPZJAYQUIRHXLNFTGKDCMWB")  # Model Dec 1938, M3 Army
+        RotorV = list("VZBRGITYUPSDNHLXAWMJQOFECK")  # Model Dec 1938, M3 Army
 
         Rotors = [RotorI, RotorII, RotorIII, RotorIV, RotorV]
         Notches = ["Q", "E", "V", "J", "Z"]
 
-        RefA = [c for c in "EJMZALYXVBWFCRQUONTSPIKHGD"]
-        RefB = [c for c in "YRUHQSLDPXNGOKMIEBFZCWVJAT"]
-        RefC = [c for c in "FVPJIAOYEDRZXWGCTKUQSBNMHL"]
+        RefA = list("EJMZALYXVBWFCRQUONTSPIKHGD")
+        RefB = list("YRUHQSLDPXNGOKMIEBFZCWVJAT")
+        RefC = list("FVPJIAOYEDRZXWGCTKUQSBNMHL")
         Reflectors = [RefA, RefB, RefC]
 
         enigmarotor = []  # Declare list for input rotors
@@ -149,16 +153,15 @@ class Enigma:
 
             ref = reflector[ring3out]  # Reflector
 
-            refreturn = ord(ref) + r3  # Value that returns to Rotor 3
-            while refreturn > 90:
-                refreturn = (refreturn - 90) + 64  # To make sure the value does not go below 65 and above 90
+            refreturn = modulo(ord(ref), r3, 65, 90)  # To make sure the value does not go below 65 and above 90
 
             revrotor3 = rotor3.index(chr(refreturn))
             revring3 = Gamma[(revrotor3 - r3) % 26]
 
-            g = ord(revring3) + r2
-            while g > 90:
-                g = (g - 90) + 64  # Same reason above
+            g = modulo(ord(revring3), r2, 65, 90)
+            # g = ord(revring3) + r2
+            # while g > 90:
+            #     g = (g - 90) + 64  # Same reason above
 
             revring2out = Beta.index(chr(g))
             h = revring2out + 65 + r2 - r3
@@ -166,8 +169,7 @@ class Enigma:
                 h = (h - 90) + 64
             while h < 65:
                 h = (h + 26)
-            lol = chr(h)  # Value that goes into Rotor 2
-            revrotor2 = rotor2.index(lol)
+            revrotor2 = rotor2.index(chr(h))
 
             revring1out = Alpha[(revrotor2 - r2) % 26]
             revrotor1 = rotor1.index(revring1out)
@@ -185,6 +187,7 @@ class Enigma:
         print("Encrypted Text: {} ".format("".join(message)))  # Print out result
         print("\nNumber of encrypted character: {}".format(length))
         print("Number of encrypted character with space: {}\n".format(lengthWithSpace))
+
 
 # 3 test cases
 Enigma.run(1, 2, 3, 2, 1, 1, 1, "AT GX BJ", "AAAAAAAAAAAAAAAAAAAAAAAAA")
